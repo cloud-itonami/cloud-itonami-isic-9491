@@ -1,4 +1,4 @@
-{:itonami.blueprint/id "cloud-itonami-9491"
+{:itonami.blueprint/id "cloud-itonami-isic-9491"
  :itonami.blueprint/name "Activities of religious organizations"
  :itonami.blueprint/isic-rev5 "9491"
  :itonami.blueprint/domain :services/religious-orgs

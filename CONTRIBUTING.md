@@ -1,6 +1,6 @@
 # Contributing
 
-`cloud-itonami-9491` accepts contributions to the OSS blueprint, capability
+`cloud-itonami-isic-9491` accepts contributions to the OSS blueprint, capability
 bindings, policy tests, documentation and operator model.
 
 ## Development

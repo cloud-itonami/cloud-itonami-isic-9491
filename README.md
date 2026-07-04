@@ -1,4 +1,4 @@
-# cloud-itonami-9491
+# cloud-itonami-isic-9491
 
 Open Business Blueprint for **ISIC Rev.5 9491**: Activities of religious organizations.
 

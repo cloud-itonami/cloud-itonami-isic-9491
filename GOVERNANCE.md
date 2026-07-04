@@ -1,6 +1,6 @@
 # Governance
 
-`cloud-itonami-9491` is an OSS open-business blueprint for activities of religious organizations -- worship, pastoral care, and religious community administration.
+`cloud-itonami-isic-9491` is an OSS open-business blueprint for activities of religious organizations -- worship, pastoral care, and religious community administration.
 Governance covers both the capability layer and the operator model.
 
 ## Maintainers

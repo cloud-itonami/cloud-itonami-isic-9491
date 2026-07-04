@@ -2,7 +2,7 @@
 
 ## Classification
 
-- Repository: `cloud-itonami-9491`
+- Repository: `cloud-itonami-isic-9491`
 - ISIC Rev.5: `9491`
 - Activity: activities of religious organizations -- worship, pastoral care, and religious community administration
 - Social impact: community access, data sovereignty, transparent audit

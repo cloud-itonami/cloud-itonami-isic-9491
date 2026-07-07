@@ -35,3 +35,11 @@
 - every referral path is auditable
 - congregant data stays outside Git
 - emergency manual override paths remain outside LLM control
+- a fabricated administrative/safeguarding citation, incomplete
+  evidence, a doctrinal statement exceeding the congregation's own
+  core doctrine, or an unresolved safeguarding concern -- each forces
+  a hold, not an override
+- doctrinal-statement publication is logged and escalated, and cannot
+  be finalized twice for the same matter: a double-publication attempt
+  is held off this actor's own matter facts alone, with no upstream
+  comparison needed

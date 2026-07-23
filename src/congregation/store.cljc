@@ -33,10 +33,9 @@
   an immutable log -- the audit trail a congregant trusting a
   congregation needs, and the evidence a congregation needs if a
   referral or statement decision is later disputed."
-  (:require #?(:clj  [clojure.edn :as edn]
-               :cljs [cljs.reader :as edn])
-            [congregation.registry :as registry]
-            [langchain.db :as d]))
+  (:require [congregation.registry :as registry]
+            [langchain.db :as d]
+            [langchain-store.core :as ls]))
 
 (defprotocol Store
   (matter [s id])
@@ -191,17 +190,14 @@
    :referral-sequence/jurisdiction    {:db/unique :db.unique/identity}
    :statement-sequence/jurisdiction   {:db/unique :db.unique/identity}})
 
-(defn- enc [v] (pr-str v))
-(defn- dec* [s] (when s (edn/read-string s)))
-
 (defn- matter->tx [{:keys [id congregant-name statement-topics core-doctrine-topics
                           safeguarding-concern-unresolved?
                           pastoral-referral-finalized? doctrinal-statement-published?
                           jurisdiction status referral-number statement-number]}]
   (cond-> {:matter/id id}
     congregant-name                             (assoc :matter/congregant-name congregant-name)
-    statement-topics                            (assoc :matter/statement-topics (enc statement-topics))
-    core-doctrine-topics                        (assoc :matter/core-doctrine-topics (enc core-doctrine-topics))
+    statement-topics                            (assoc :matter/statement-topics (ls/enc statement-topics))
+    core-doctrine-topics                        (assoc :matter/core-doctrine-topics (ls/enc core-doctrine-topics))
     (some? safeguarding-concern-unresolved?)     (assoc :matter/safeguarding-concern-unresolved? safeguarding-concern-unresolved?)
     (some? pastoral-referral-finalized?)        (assoc :matter/pastoral-referral-finalized? pastoral-referral-finalized?)
     (some? doctrinal-statement-published?)      (assoc :matter/doctrinal-statement-published? doctrinal-statement-published?)
@@ -218,8 +214,8 @@
 (defn- pull->matter [m]
   (when (:matter/id m)
     {:id (:matter/id m) :congregant-name (:matter/congregant-name m)
-     :statement-topics (dec* (:matter/statement-topics m))
-     :core-doctrine-topics (dec* (:matter/core-doctrine-topics m))
+     :statement-topics (ls/dec* (:matter/statement-topics m))
+     :core-doctrine-topics (ls/dec* (:matter/core-doctrine-topics m))
      :safeguarding-concern-unresolved? (boolean (:matter/safeguarding-concern-unresolved? m))
      :pastoral-referral-finalized? (boolean (:matter/pastoral-referral-finalized? m))
      :doctrinal-statement-published? (boolean (:matter/doctrinal-statement-published? m))
@@ -235,25 +231,25 @@
          (map #(pull->matter (d/pull (d/db conn) matter-pull [:matter/id %])))
          (sort-by :id)))
   (safeguarding-screen-of [_ id]
-    (dec* (d/q '[:find ?p . :in $ ?mid
+    (ls/dec* (d/q '[:find ?p . :in $ ?mid
                 :where [?k :safeguarding-screen/matter-id ?mid] [?k :safeguarding-screen/payload ?p]]
               (d/db conn) id)))
   (assessment-of [_ matter-id]
-    (dec* (d/q '[:find ?p . :in $ ?mid
+    (ls/dec* (d/q '[:find ?p . :in $ ?mid
                 :where [?a :assessment/matter-id ?mid] [?a :assessment/payload ?p]]
               (d/db conn) matter-id)))
   (ledger [_]
     (->> (d/q '[:find ?s ?f :where [?e :ledger/seq ?s] [?e :ledger/fact ?f]] (d/db conn))
          (sort-by first)
-         (mapv (comp dec* second))))
+         (mapv (comp ls/dec* second))))
   (referral-history [_]
     (->> (d/q '[:find ?s ?r :where [?e :referral/seq ?s] [?e :referral/record ?r]] (d/db conn))
          (sort-by first)
-         (mapv (comp dec* second))))
+         (mapv (comp ls/dec* second))))
   (statement-history [_]
     (->> (d/q '[:find ?s ?r :where [?e :statement/seq ?s] [?e :statement/record ?r]] (d/db conn))
          (sort-by first)
-         (mapv (comp dec* second))))
+         (mapv (comp ls/dec* second))))
   (next-referral-sequence [_ jurisdiction]
     (or (d/q '[:find ?n . :in $ ?j
               :where [?e :referral-sequence/jurisdiction ?j] [?e :referral-sequence/next ?n]]
@@ -274,10 +270,10 @@
       (d/transact! conn [(matter->tx value)])
 
       :assessment/set
-      (d/transact! conn [{:assessment/matter-id (first path) :assessment/payload (enc payload)}])
+      (d/transact! conn [{:assessment/matter-id (first path) :assessment/payload (ls/enc payload)}])
 
       :safeguarding-screen/set
-      (d/transact! conn [{:safeguarding-screen/matter-id (first path) :safeguarding-screen/payload (enc payload)}])
+      (d/transact! conn [{:safeguarding-screen/matter-id (first path) :safeguarding-screen/payload (ls/enc payload)}])
 
       :matter/mark-referred
       (let [matter-id (first path)
@@ -287,7 +283,7 @@
         (d/transact! conn
                      [(matter->tx (assoc matter-patch :id matter-id))
                       {:referral-sequence/jurisdiction jurisdiction :referral-sequence/next next-n}
-                      {:referral/seq (count (referral-history s)) :referral/record (enc (get result "record"))}])
+                      {:referral/seq (count (referral-history s)) :referral/record (ls/enc (get result "record"))}])
         result)
 
       :matter/mark-published
@@ -298,12 +294,12 @@
         (d/transact! conn
                      [(matter->tx (assoc matter-patch :id matter-id))
                       {:statement-sequence/jurisdiction jurisdiction :statement-sequence/next next-n}
-                      {:statement/seq (count (statement-history s)) :statement/record (enc (get result "record"))}])
+                      {:statement/seq (count (statement-history s)) :statement/record (ls/enc (get result "record"))}])
         result)
       nil)
     s)
   (append-ledger! [s fact]
-    (d/transact! conn [{:ledger/seq (count (ledger s)) :ledger/fact (enc fact)}])
+    (d/transact! conn [{:ledger/seq (count (ledger s)) :ledger/fact (ls/enc fact)}])
     fact)
   (with-matters [s matters]
     (when (seq matters) (d/transact! conn (mapv matter->tx (vals matters)))) s))

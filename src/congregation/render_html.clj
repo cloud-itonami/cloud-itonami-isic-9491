@@ -281,7 +281,7 @@
           (if retained
             (str "<span class=\"ok\">retained in record &middot; <code>"
                  (esc retained) "</code></span>")
-            (str "<span class=\"warn\">audit only — not retained in record</span>"))))))
+            "<span class=\"warn\">audit only — not retained in record</span>")))))
 
 (defn- registry-rows [db]
   (concat

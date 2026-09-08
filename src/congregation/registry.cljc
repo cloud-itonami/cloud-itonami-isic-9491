@@ -35,7 +35,7 @@
   publish-doctrinal-statement`, always human-gated -- see README
   `Actuation`)."
   (:require [clojure.set :as set]
-            [clojure.string :as str]))
+            [kotoba.lang.text :as str]))
 
 (defn- unsigned-certificate
   "Every certificate this actor produces is UNSIGNED -- signature is the
@@ -79,7 +79,7 @@
     (throw (ex-info "pastoral-referral: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "pastoral-referral: sequence must be >= 0" {})))
-  (let [referral-number (str (str/upper-case jurisdiction) "-REF-" (zero-pad sequence 6))
+  (let [referral-number (str (str/upper jurisdiction) "-REF-" (zero-pad sequence 6))
         record {"record_id" referral-number
                 "kind" "pastoral-referral-draft"
                 "matter_id" matter-id
@@ -104,7 +104,7 @@
     (throw (ex-info "doctrinal-statement: jurisdiction required" {})))
   (when (< sequence 0)
     (throw (ex-info "doctrinal-statement: sequence must be >= 0" {})))
-  (let [statement-number (str (str/upper-case jurisdiction) "-DOC-" (zero-pad sequence 6))
+  (let [statement-number (str (str/upper jurisdiction) "-DOC-" (zero-pad sequence 6))
         record {"record_id" statement-number
                 "kind" "doctrinal-statement-draft"
                 "matter_id" matter-id

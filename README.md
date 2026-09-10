@@ -201,14 +201,14 @@ stack only -- no bespoke domain capability lib to reference at all.
 
 | File | Role |
 |---|---|
-| `src/congregation/store.cljc` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + separate pastoral-referral/doctrinal-statement history. No dynamically-filed sub-record -- both actuation ops act directly on a pre-seeded matter, and the double-actuation guards check dedicated `:pastoral-referral-finalized?`/`:doctrinal-statement-published?` booleans rather than a `:status` value |
-| `src/congregation/registry.cljc` | Pastoral-referral + doctrinal-statement draft records, plus `doctrinal-statement-exceeds-core-doctrine?` -- the FIFTH instance of this fleet's set-containment/subset check family (`registrar`/`casework`/`secondary`/`consulting` established the first four), never judging theological content itself |
-| `src/congregation/facts.cljc` | Per-jurisdiction religious-organization administrative + safeguarding catalog with an official spec-basis citation per entry, honest coverage reporting |
-| `src/congregation/congregationadvisor.cljc` | **CongregationOps-LLM** -- `mock-advisor` ‖ `llm-advisor`; intake/assessment/safeguarding-screening/pastoral-referral/doctrinal-statement proposals |
-| `src/congregation/governor.cljc` | **Congregational Governance Governor** -- 4 HARD checks (spec-basis · evidence-incomplete · doctrinal-statement-exceeds-core-doctrine, pure ground-truth subset recompute · safeguarding-concern-unresolved, unconditional evaluation, the THIRTY-FIRST grounding of this discipline, distinct from `school`'s staff-background-check concept) + already-referred/already-published guards + 1 soft (confidence/actuation gate) |
-| `src/congregation/phase.cljc` | **Phase 0→3** -- read-only → assisted intake → assisted verify → supervised (both pastoral-referral finalization and doctrinal-statement publication always human; matter intake is the ONLY auto-eligible op, no direct capital risk) |
-| `src/congregation/operation.cljc` | **OperationActor** -- langgraph-clj StateGraph |
-| `src/congregation/sim.cljc` | demo driver |
+| `src/congregation/store.kotoba` | **Store** protocol -- `MemStore` ‖ `DatomicStore` (`langchain.db`) + append-only audit ledger + separate pastoral-referral/doctrinal-statement history. No dynamically-filed sub-record -- both actuation ops act directly on a pre-seeded matter, and the double-actuation guards check dedicated `:pastoral-referral-finalized?`/`:doctrinal-statement-published?` booleans rather than a `:status` value |
+| `src/congregation/registry.kotoba` | Pastoral-referral + doctrinal-statement draft records, plus `doctrinal-statement-exceeds-core-doctrine?` -- the FIFTH instance of this fleet's set-containment/subset check family (`registrar`/`casework`/`secondary`/`consulting` established the first four), never judging theological content itself |
+| `src/congregation/facts.kotoba` | Per-jurisdiction religious-organization administrative + safeguarding catalog with an official spec-basis citation per entry, honest coverage reporting |
+| `src/congregation/congregationadvisor.kotoba` | **CongregationOps-LLM** -- `mock-advisor` ‖ `llm-advisor`; intake/assessment/safeguarding-screening/pastoral-referral/doctrinal-statement proposals |
+| `src/congregation/governor.kotoba` | **Congregational Governance Governor** -- 4 HARD checks (spec-basis · evidence-incomplete · doctrinal-statement-exceeds-core-doctrine, pure ground-truth subset recompute · safeguarding-concern-unresolved, unconditional evaluation, the THIRTY-FIRST grounding of this discipline, distinct from `school`'s staff-background-check concept) + already-referred/already-published guards + 1 soft (confidence/actuation gate) |
+| `src/congregation/phase.kotoba` | **Phase 0→3** -- read-only → assisted intake → assisted verify → supervised (both pastoral-referral finalization and doctrinal-statement publication always human; matter intake is the ONLY auto-eligible op, no direct capital risk) |
+| `src/congregation/operation.kotoba` | **OperationActor** -- langgraph-clj StateGraph |
+| `src/congregation/sim.kotoba` | demo driver |
 | `test/congregation/*_test.clj` | governor contract · phase invariants · store parity · registry conformance · facts coverage |
 
 ## Business-process coverage (honest)

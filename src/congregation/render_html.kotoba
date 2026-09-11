@@ -6,7 +6,7 @@
   namespace drives the REAL actor stack (`congregation.operation` ->
   `congregation.governor` -> `congregation.store`) via langgraph
   `g/run*`, through a scenario adapted from this repo's own
-  `congregation.sim` demo driver (`clojure -M:dev:run`, confirmed BEFORE
+  `congregation.sim` demo driver (`kbb -M:dev:run`, confirmed BEFORE
   writing this file to run against the real seeded matter ids
   `matter-1`..`matter-4` -- this repo's sim driver uses ids that DO
   match `congregation.store/demo-data`, so it was safe to reuse rather
@@ -31,7 +31,7 @@
   byte-identical across reruns against the same seed (verified by
   diffing two consecutive runs into scratch dirs).
 
-  Usage: `clojure -M:dev:render-html [out-file]`
+  Usage: `kbb -M:dev:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
   (:require [jp-go-dds.skin]
             [kotoba.lang.text :as str]
@@ -335,7 +335,7 @@
      (section
       "Matter directory"
       (str "Demo snapshot — build-time-generated from <code>congregation.store</code> "
-           "via <code>congregation.render-html</code> (<code>clojure -M:dev:render-html</code>). "
+           "via <code>congregation.render-html</code> (<code>kbb -M:dev:render-html</code>). "
            "Every row is a real seeded matter; referral and statement numbers are produced by "
            "<code>congregation.registry</code> during this run, not typed in.")
       (table ["Matter" "Congregation" "Jurisdiction" "Proposed statement topics"

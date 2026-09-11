@@ -1,5 +1,5 @@
 (ns congregation.sim
-  "Demo driver -- `clojure -M:dev:run`. Walks a clean matter through
+  "Demo driver -- `kbb -M:dev:run`. Walks a clean matter through
   intake -> assessment verification -> safeguarding-concern screening
   -> pastoral-referral proposal (always escalates) -> human approval
   -> commit, then through doctrinal-statement proposal (always

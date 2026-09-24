@@ -1,0 +1,33 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README "Robotics premise": a facility-access control robot manages
+;; physical premises access for a religious organization (ISIC 9491), gated
+;; by the Congregational Governance Governor. Around the premises its
+;; physical work is setting out and clearing the hall -- pushing a trolley of
+;; stacked chairs -- and draining the immersion baptistery after a service.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-9491"
+ :cases
+ [{:id :stacked-chair-trolley
+   :kind :transport
+   :procedure "robot pushes a trolley of 15 stacked chairs (75 kg) from the store across the hall and stops at the row line"
+   :params {:mass-kg 50.0 :payload-kg 75.0 :distance-m 30.0 :v-max-mps 0.8 :a-max-mps2 0.4
+            :brake-decel-mps2 1.2 :drive-force-n 200.0 :crr 0.02
+            :cog-height-m 0.35 :support-half-length-m 0.30
+            :max-time-s 1200.0}
+   :sweep {:param :payload-cog-height-m :values [0.6 0.9 1.2 1.5 1.8]}
+   :quantity :min-tipover-margin
+   :limit {:min 0.3 :basis "estimate: keep 30 % of the static stability margin when stopping with a chair stack, for stack sway and door thresholds; a stacking chair is taken as ~5 kg and the sweep is the height of the stack centre of gravity"}
+   :boundary {:lo 0.3 :hi 3.0}}
+  {:id :baptistery-drain
+   :kind :tank-drain
+   :procedure "after the service the robot opens the baptistery drain and the pool empties by gravity"
+   :params {:tank-area-m2 5.0 :h0-m 1.1 :h-target-m 0.02 :cd 0.62 :dt-s 1.0}
+   :sweep {:param :orifice-area-m2 :values [4.91e-4 8.04e-4 1.257e-3 1.963e-3 3.318e-3]}
+   :quantity :time-to-target-s
+   :limit {:max 3600.0 :basis "estimate: baptistery emptied within an hour so the space can be cleaned and closed the same day; the sweep is 25/32/40/50/65 mm drain bores"}
+   :boundary {:lo 1.0e-4 :hi 0.01}}]}
